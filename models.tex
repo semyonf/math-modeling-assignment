@@ -6,8 +6,10 @@
 \usepackage{listings}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepackage[normalem]{ulem}
 \usepackage{cmap}
 \usepackage{geometry}
+\usepackage{amsmath}
 
 \geometry{left=35mm, right=10mm, top=20mm, bottom=20mm}
 
@@ -29,7 +31,7 @@
     {
     \LARGE \textbf{КУРСОВОЙ ПРОЕКТ} \\[3ex]
     по дисциплине: «Математические модели» \\
-    по теме: «Моделирование процесса параметрической идентификации динамического объекта» \\
+    по теме: «Моделирование процесса параметрической идентификации динамического объекта» \\[3ex]
     Вариант №39
     }
 \end{center}
@@ -39,7 +41,7 @@
 \noindent Выполнил\\
 студент гр.23531/21\hfill
 \begin{minipage}{0.7\textwidth}
-    \hfill \underline{\hspace{2cm}} \hfill С.А. Фомин
+    \hfill \uline{\hspace{3cm}} \hspace{1.1cm} С.А. Фомин
 \end{minipage}
 
 \vspace{3ex}
@@ -47,12 +49,12 @@
 \noindent Руководитель,\\
 доцент\hfill
 \begin{minipage}{0.7\textwidth}
-    \hfill \underline{\hspace{2cm}} \hfillТ.В. Леонтьева
+    \hfill \uline{\hspace{3cm}} \hspace{0.5cm} Т.В. Леонтьева
 \end{minipage}
 
 \vspace{3ex}
 
-\hfill \begin{minipage}{0.6\textwidth} \hfill «\underline{\hspace{1cm}}»\underline{\hspace{3cm}} 2016 г.\end{minipage}
+\hfill \begin{minipage}{0.6\textwidth} \hfill «\uline{\hspace{1cm}}»\uline{\hspace{3cm}} 2016 г.\end{minipage}
 
 \vfill
 
@@ -63,7 +65,59 @@
 
 \newpage
 \thispagestyle{empty}
-\section{Задание}
+\begin{center}
+    ЗАДАНИЕ\\
+    НА ВЫПОЛНЕНИЕ КУРСОВОГО ПРОЕКТА
+\end{center}
+
+\noindent студенту группы \uline{\hspace{0.5cm}23531/21\hspace{0.5cm}} \quad \uline{\hfill Фомину С.А.\hfill}
+
+\vspace{0.5cm}
+
+\begin{enumerate}
+    \item
+        \textbf{Тема проекта (работы):} Моделирование процесса параметрической идентификации динамического объекта, вариант №39
+    \item
+        \textbf{Срок сдачи студентом законченного проекта (работы):} 30.12.2017
+    \item
+        \textbf{Исходные данные к проекту (работе):}
+            $$W(s) = \frac{k(1-as)}{(1+as)(1+b_1s+b_2s^2)}$$
+            $$
+                \begin{matrix}
+                    \begin{aligned}
+                        x(t) = 5 \\
+                        k = 4 \\
+                        a = 3 \\
+                        b_1 = 1 \\
+                        b_2 = 2
+                    \end{aligned}
+                    &
+                    \hspace{2cm}
+                    \begin{aligned}
+                        \text{метод оптимизации: Гаусса-Зейделя $(GZ_1)$} \\
+                        \text{целевая функция: 2} \\
+                        \text{шум: 2} \\
+                        \text{считать неизвестными: $k, b_1$} \\
+                    \end{aligned}
+                \end{matrix}
+            $$
+    \item
+        \textbf{Содержание пояснительной записки (перечень подлежащих разработке вопросов):} введение, основная часть (раскрывается структура основной части), заключение, список использованных источников, приложения, нахождение $y^T$, создание и проверка ГСЧ с помощью гистограмм, формирование шума и $y^\epsilon$, реализация алгоритма оптимизации и проверка на тостовых функциях, нахождение $m^M$ и целевой функции $(CF)$, её оптимизация. Примерный объем пояснительной записки 28 страниц машинописного текста
+    \item
+        \textbf{Консультанты:} Леонтьева Т.В.
+    \item
+        \textbf{Дата получения задания:} 05 сентября 2017 г.
+\end{enumerate}
+
+\vfill
+
+\noindent \textbf{Руководитель} \hfill
+\hfill \uline{\hspace{3cm}} \hspace{1.1cm} Леонтьева Т.В.
+
+\vspace{1cm}
+
+\noindent \textbf{Задание принял к исполнению} \hfill
+\hfill \uline{\hspace{3cm}} \hspace{1.7cm} Фомин С.А.
 
 \newpage
 \tableofcontents
