@@ -1,17 +1,23 @@
+.PHONY:calc pdf clean
 TEX = pdflatex
-CALC = calc.js
+CALC = ./calc.js
 
-all: $(CALC) report.tex
+all:pdf calc clean
+
+
+calc:
+	$(CALC) report.tex
 	if [ ! -d 'data' ];    \
 		then mkdir 'data'; \
 	fi
 	./$(CALC) > data/points.dat
+
+pdf:
 	$(TEX) report.tex
 	if [ ! -d 'out' ];    \
 		then mkdir 'out'; \
 	fi
 	mv report.pdf out/report.pdf
-	make clean
 
 run:
 	if [ ! -r 'out/report.pdf' ];    \
