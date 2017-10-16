@@ -14,7 +14,7 @@
 \usepackage{titlesec}
 
 \usepgfplotslibrary{units}
-\pgfplotsset{compat=1.10}
+\pgfplotsset{compat=1.14}
 \geometry{left=25mm, right=10mm, top=20mm, bottom=20mm}
 
 \renewcommand{\thepart}{\arabic{part}}
@@ -71,7 +71,7 @@
 
 \vspace{3ex}
 
-\hfill \begin{minipage}{0.6\textwidth} \hfill «\uline{\hspace{1cm}}»\uline{\hspace{3cm}} 2016 г.\end{minipage}
+\hfill \begin{minipage}{0.6\textwidth} \hfill «\uline{\hspace{1cm}}»\uline{\hspace{3cm}} 2017 г.\end{minipage}
 
 \vfill
 
@@ -279,6 +279,7 @@ $$
             height=10cm,
             xlabel=t,
             ylabel=y(t),
+            samples=1,
             minor tick num = 1,
             grid = both
         ]
@@ -287,12 +288,19 @@ $$
 
         \end{axis}
     \end{tikzpicture}
+
+    \vspace{1cm}
+
     \pgfplotstabletypeset[
         col sep=space,
         header=true,
+        skip rows between index={14}{24},
         columns/0/.style = {
             string type,
-            column name = $t$
+            column name = $t$,
+            fixed zerofill,
+            precision=1,
+            dec sep align
             },
         columns/1/.style = {
             column name=$y(t)$,
@@ -300,9 +308,16 @@ $$
             fixed zerofill,
             precision=11,
             dec sep align
+        },
+        postproc cell content/.append code={%
+          \ifnum\pgfplotstablerow=13
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\ensuremath{\cdots}}%
+          \fi
         }
     ]{data/points.dat}
 \end{center}
+
+\newpage
 
 \section{Проверка}
 
@@ -311,5 +326,8 @@ $$
 $$
     \lim_{s\to0}CW(s) = C \cdot \lim_{s\to0}\left(\dfrac{k\overbrace{(1-as)}^{\to1}}{\underbrace{(1+as)}_{\to1}\underbrace{(1+b_1s+b_2s^2)}_{\to1}}\right) = C \cdot k = 4 \cdot 5 = 20
 $$
+
+\section{Выводы первой части}
+По полученным данным можно сделать вывод, что полученные значения совпадают с ожидаемыми, полученная функция сходится к значению того пределе, который был вычислен, был выбран период наблюдения в 25 точек, что функция сходится и приходит к периоду покоя быстро и нет смысла увеличивать их количество
 
 \end{document}

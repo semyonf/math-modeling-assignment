@@ -10,24 +10,20 @@ let xt = 5,
     z1 = 0,
     z2 = 0,
     z3 = 0,
-    h = 0.1,
-
-    iterations = 500,
+    h = 0.05,
 
     result = '';
 
-while (iterations) {
+for (let iterations = 1; iterations <= 500; iterations++) {
     z3 = (xt - z1 - (b1 + a) * z2 - (b1 + a * b1) * z3) / (a * b2);
     z2 = z2 + h * z3;
     z1 = z1 + h * z2;
 
     y = k * (z1 - a * z2);
 
-    if (iterations % 10 == 0) {
-        result += `${(1000 - iterations) * h} ${y}\n`;
+    if (iterations % 20 == 0) {
+        result += `${iterations * h} ${y}\n`;
     }
-
-    --iterations;
 }
 
 console.log(result);
