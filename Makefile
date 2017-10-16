@@ -1,17 +1,22 @@
 TEX = pdflatex
+NODE = node
 
-all:
-	$(TEX) models.tex
+all: calc.js report.tex
+	if [ ! -d 'data' ];    \
+		then mkdir 'data'; \
+	fi
+	$(NODE) calc.js > data/points.dat
+	$(TEX) report.tex
 	if [ ! -d 'out' ];    \
 		then mkdir 'out'; \
 	fi
-	mv models.pdf out/render.pdf
+	mv report.pdf out/report.pdf
 	make clean
 
 run:
-	if [ ! -r 'out/render.pdf' ];    \
+	if [ ! -r 'out/report.pdf' ];    \
 		then echo '\n\nNOTHING TO DISPLAY, BUILD FIRST!'; \
-		else open out/render.pdf ;\
+		else open out/report.pdf ;\
 	fi
 
 clean:
