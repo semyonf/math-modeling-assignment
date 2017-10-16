@@ -1,11 +1,11 @@
 TEX = pdflatex
-NODE = node
+CALC = calc.js
 
-all: calc.js report.tex
+all: $(CALC) report.tex
 	if [ ! -d 'data' ];    \
 		then mkdir 'data'; \
 	fi
-	$(NODE) calc.js > data/points.dat
+	./$(CALC) > data/points.dat
 	$(TEX) report.tex
 	if [ ! -d 'out' ];    \
 		then mkdir 'out'; \
