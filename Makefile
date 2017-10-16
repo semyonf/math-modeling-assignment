@@ -2,8 +2,7 @@
 TEX = pdflatex
 CALC = ./calc.js
 
-all:pdf calc clean
-
+all: calc pdf clean
 
 calc:
 	$(CALC) report.tex
