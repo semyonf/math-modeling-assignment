@@ -9,7 +9,7 @@ calc:
 	if [ ! -d 'data' ];    \
 		then mkdir 'data'; \
 	fi
-	./$(CALC) > data/points.dat
+	./$(CALC)
 
 pdf:
 	$(TEX) report.tex

@@ -274,47 +274,59 @@ $$
 
 \begin{center}
     \begin{tikzpicture}
-        \begin{axis}[
-            width=16cm,
-            height=10cm,
-            xlabel=t,
-            ylabel=y(t),
-            samples=1,
-            minor tick num = 1,
-            grid = both
-        ]
-
-        \addplot[gr1] table {data/points.dat};
-
+        \begin{axis}
+            \addplot table [col sep=comma] {data/theor.csv};
         \end{axis}
     \end{tikzpicture}
 
+    \begin{tikzpicture}
+        \begin{axis}
+            \addplot table [col sep=comma] {data/noised.csv};
+        \end{axis}
+    \end{tikzpicture}
+
+    % НАДО ЕЩЕ ТАБЛИЦУ ЗНАЧЕНИЙ
+
+    % \begin{tikzpicture}
+    %     \begin{axis}[
+    %         width=16cm,
+    %         height=10cm,
+    %         xlabel=t,
+    %         ylabel=y(t),
+    %         samples=1,
+    %         minor tick num = 1,
+    %         grid = both
+    %     ]
+
+    %     \end{axis}
+    % \end{tikzpicture}
+
     \vspace{1cm}
 
-    \pgfplotstabletypeset[
-        col sep=space,
-        header=true,
-        skip rows between index={14}{24},
-        columns/0/.style = {
-            string type,
-            column name = $t$,
-            fixed zerofill,
-            precision=1,
-            dec sep align
-            },
-        columns/1/.style = {
-            column name=$y(t)$,
-            fixed,
-            fixed zerofill,
-            precision=11,
-            dec sep align
-        },
-        postproc cell content/.append code={%
-          \ifnum\pgfplotstablerow=13
-            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\ensuremath{\cdots}}%
-          \fi
-        }
-    ]{data/points.dat}
+    % \pgfplotstabletypeset[
+    %     col sep=comma,
+    %     header=true,
+    %     skip rows between index={14}{24},
+    %     columns/0/.style = {
+    %         string type,
+    %         column name = $t$,
+    %         fixed zerofill,
+    %         precision=1,
+    %         dec sep align
+    %         },
+    %     columns/1/.style = {
+    %         column name=$y(t)$,
+    %         fixed,
+    %         fixed zerofill,
+    %         precision=11,
+    %         dec sep align
+    %     },
+    %     postproc cell content/.append code={%
+    %       \ifnum\pgfplotstablerow=13
+    %         \pgfkeyssetvalue{/pgfplots/table/@cell content}{\ensuremath{\cdots}}%
+    %       \fi
+    %     }
+    % ]{data/points.dat}
 \end{center}
 
 \newpage
@@ -328,7 +340,7 @@ $$
 $$
 
 \section{Выводы первой части}
-По полученным данным можно сделать вывод, что полученные значения совпадают с ожидаемыми, полученная функция сходится к значению того пределе, который был вычислен, был выбран период наблюдения в 25 точек, что функция сходится и приходит к периоду покоя быстро и нет смысла увеличивать их количество
+По полученным данным можно сделать вывод, что полученные значения совпадают с ожидаемыми, полученная функция сходится к значению того пределе, который был вычислен, был выбран период наблюдения в 25 точек, что функция сходится и приходит к периоду покоя быстро и нет смысла увеличивать их количество.
 
 \part{ФОРМИРОВАНИЕ ШУМА}
 \setcounter{section}{0}
@@ -343,9 +355,9 @@ $$
     \end{Bmatrix}
     =
     \begin{Bmatrix}
-        1,078 \\
-        2,156 \\
-        4,312
+        1.092 \\
+        2.184 \\
+        4.367
     \end{Bmatrix}
 $$
 
