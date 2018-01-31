@@ -31,10 +31,8 @@
                 legend style={at={(0.5,-0.1)},anchor=north}
             ]
 
-            % \addplot[gr1] table {data/1points.dat};
-            \addlegendentry{$Y_\text{Т}$}
-            % \addplot[gr2] table {data/approx.dat};
-            \addlegendentry{$Y_\text{сред}$}
+            \addplot table [col sep=comma] {data/theor.csv};
+            \addplot table [col sep=comma] {data/optimized005.csv};
 
             \end{axis}
         \end{tikzpicture}
