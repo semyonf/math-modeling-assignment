@@ -6,21 +6,33 @@
 const fs = require('fs');
 
 /**
- * Вычисление теоретических, экспериментальных значений
+ * Вычисление векторов теоретических и экспериментальных значений
  */
 const
   theoreticalValues     = getFunctionValues(),
-  experimentalValues005 = getExperimental(theoreticalValues, 0.05),
-  optimized             = optimize(experimentalValues005);
+  experimentalValues005 = getExperimental(theoreticalValues, 0.05);
+  // тут надо еще с другими коэффициентами (0.1 и 0.2)
 
+/**
+ * Отыскание неизвестных b1 и k путём оптимизации экспериментальных значений
+ * и поиска наименьшей целевой функции, или как сказать? Я должен их как-то
+ * усреднить для всех вариантов коэффициентов?
+ */
+const optimized = optimize(experimentalValues005);
+
+/**
+ * Тут просто сохраняются вектора в CSV-таблицы для отчёта
+ */
 createCSV('data/theor.csv', theoreticalValues);
 createCSV('data/noised005.csv', experimentalValues005);
 createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
 
 /**
- * Вычислить модуль значений функции
- * если параметры не переданы, то теориетические значения, aka Y(теор.)
- * или, если переданы параметры, модельные значения, aka Y(м.)
+ * Вычислить вектор значений функции:
+ * - если параметры не переданы, то теориетические значения, aka Y(теор.)
+ * - если переданы параметры, модельные значения, aka Y(м.)
+ *
+ * всё верно говорю?
  *
  * @param  {Number} [b1] неизвестен по условию
  * @param  {Number} [k]  неизвестен по условию
@@ -47,12 +59,12 @@ function getFunctionValues(b1 = 1, k = 4) {
 }
 
 /**
- * Вычислить целевую функцию
+ * Вычислить целевую функцию, aka CF (тип по заданию: 2)
  *
  * @param  {[Number]} experimentalValues вектор экспериментальных значений
  * @param  {[Number]} modelValues        вектор модельных значений
  *
- * @return {Number}                      значение целевой функции (тип: 2)
+ * @return {Number}                      значение целевой функции
  */
 function getTargetFunction(experimentalValues, modelValues) {
   let targetValues = 0;
@@ -64,10 +76,10 @@ function getTargetFunction(experimentalValues, modelValues) {
 }
 
 /**
- * Вычислить экспериментальные значения
+ * Вычислить экспериментальные значения, aka Y(э)
  *
  * @param  {[Number]} theorValues вектор теоретических значений
- * @param  {Number} factor        коэффициент зашумления
+ * @param  {Number}   factor      коэффициент зашумления
  *
  * @return {[Number]}             вектор экспериментальных значений
  */
@@ -83,9 +95,9 @@ function getExperimental(theorValues, factor) {
 }
 
 /**
- * Оптимизировать методом Гаусса-Зейделя
+ * Оптимизация методом Гаусса-Зейделя
  *
- * @param  {[Number]} experimentalValues экспериментальные значения
+ * @param {[Number]} experimentalValues экспериментальные значения
  *
  * @return {object} объект двух пар ключ:значение
  */
@@ -98,9 +110,11 @@ function optimize(experimentalValues) {
     f1,
     f2 = f,
 
+    // Это, я так понимаю, шаги
     h1 = 0.1,
     h2 = 0.1,
 
+    // А это вроде направление, то есть изменяемый параметр
     m = 1;
 
   while (true) {
