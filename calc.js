@@ -10,7 +10,9 @@ const fs = require('fs');
  */
 const
   theoreticalValues     = getFunctionValues(),
-  experimentalValues005 = getExperimental(theoreticalValues, 0.05);
+  experimentalValues005 = getExperimental(theoreticalValues, 0.05),
+  experimentalValues01 = getExperimental(theoreticalValues, 0.1),
+  experimentalValues02 = getExperimental(theoreticalValues, 0.2);
   // тут надо еще с другими коэффициентами (0.1 и 0.2)
 
 /**
@@ -18,14 +20,28 @@ const
  * и поиска наименьшей целевой функции, или как сказать? Я должен их как-то
  * усреднить для всех вариантов коэффициентов?
  */
-const optimized = optimize(experimentalValues005);
+const
+  optimized005 = optimize(experimentalValues005),
+  optimized01 = optimize(experimentalValues01),
+  optimized02 = optimize(experimentalValues02);
 
 /**
  * Тут просто сохраняются вектора в CSV-таблицы для отчёта
  */
 createCSV('data/theor.csv', theoreticalValues);
+
 createCSV('data/noised005.csv', experimentalValues005);
-createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
+createCSV('data/noised01.csv', experimentalValues01);
+createCSV('data/noised02.csv', experimentalValues02);
+
+createCSV('data/optimized005.csv', getFunctionValues(optimized005.b1, optimized005.k));
+createCSV('data/optimized01.csv', getFunctionValues(optimized01.b1, optimized01.k));
+createCSV('data/optimized02.csv', getFunctionValues(optimized02.b1, optimized02.k));
+
+createCSV('data/steps005.csv', optimized005.steps, 'iteration, b1, k, CF');
+createCSV('data/steps01.csv', optimized01.steps, 'iteration, b1, k, CF');
+createCSV('data/steps02.csv', optimized02.steps, 'iteration, b1, k, CF');
+
 createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
 
 /**
@@ -127,15 +143,15 @@ function optimize(experimentalValues) {
     f1,
     f2 = f,
 
-    // Это, я так понимаю, шаги
     h1 = 0.1,
     h2 = 0.1,
+    steps = [],
 
     // А это вроде направление, то есть изменяемый параметр
-    m = 1;
+    direction = true;
 
   while (true) {
-    if (m == 1) {
+    if (direction) {
       b1 = b1 + h1;
       f1 = getTargetFunction(experimentalValues, getFunctionValues(b1, k));
 
@@ -147,8 +163,8 @@ function optimize(experimentalValues) {
           h1 = -0.5 * h1;
       }
 
-      ++m;
-    } else if (m == 2) {
+      direction = false;
+    } else if (!direction) {
       k = k + h2;
       f1 = getTargetFunction(experimentalValues, getFunctionValues(b1, k));
 
@@ -160,11 +176,13 @@ function optimize(experimentalValues) {
           h2 = -0.5 * h2;
       }
 
-      m = 1;
+      direction = true;
     }
 
     if (Math.abs(f2 - f1) < 1e-5) {
-      return {b1, k};
+      return {b1, k, steps};
+    } else {
+      steps.push(`${b1}, ${k}, ${f1}`);
     }
 
     f2 = f1;
