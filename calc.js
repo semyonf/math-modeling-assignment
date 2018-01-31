@@ -146,7 +146,7 @@ function optimize(experimentalValues) {
       m = 1;
     }
 
-    if (Math.abs(f2 - f1) < 0.0000001) {
+    if (Math.abs(f2 - f1) < 1e-5) {
       return {b1, k};
     }
 
