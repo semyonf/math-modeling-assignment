@@ -7,6 +7,7 @@
 \usepackage{multirow}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
+\usepackage{csvsimple}
 \usepackage[normalem]{ulem}
 \usepackage{cmap}
 \usepackage{geometry}
@@ -33,6 +34,25 @@
 \title{3.1 Титульный лист}
 
 \begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}
+        \addplot table [col sep=comma] {data/theor.csv};
+    \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \begin{axis}
+        \addplot table [col sep=comma] {data/noised005.csv};
+    \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+    \begin{axis}
+        \addplot table [col sep=comma] {data/theor.csv};
+        \addplot table [col sep=comma] {data/optimized.csv};
+    \end{axis}
+\end{tikzpicture}
 
 \thispagestyle{empty}
 
@@ -273,17 +293,7 @@ $$
 }
 
 \begin{center}
-    \begin{tikzpicture}
-        \begin{axis}
-            \addplot table [col sep=comma] {data/theor.csv};
-        \end{axis}
-    \end{tikzpicture}
 
-    \begin{tikzpicture}
-        \begin{axis}
-            \addplot table [col sep=comma] {data/noised.csv};
-        \end{axis}
-    \end{tikzpicture}
 
     % НАДО ЕЩЕ ТАБЛИЦУ ЗНАЧЕНИЙ
 
@@ -301,32 +311,31 @@ $$
     %     \end{axis}
     % \end{tikzpicture}
 
+    \begin{tikzpicture}
+        \begin{axis}
+            \addplot table [col sep=comma] {data/theor.csv};
+        \end{axis}
+    \end{tikzpicture}
+
     \vspace{1cm}
 
-    % \pgfplotstabletypeset[
-    %     col sep=comma,
-    %     header=true,
-    %     skip rows between index={14}{24},
-    %     columns/0/.style = {
-    %         string type,
-    %         column name = $t$,
-    %         fixed zerofill,
-    %         precision=1,
-    %         dec sep align
-    %         },
-    %     columns/1/.style = {
-    %         column name=$y(t)$,
-    %         fixed,
-    %         fixed zerofill,
-    %         precision=11,
-    %         dec sep align
-    %     },
-    %     postproc cell content/.append code={%
-    %       \ifnum\pgfplotstablerow=13
-    %         \pgfkeyssetvalue{/pgfplots/table/@cell content}{\ensuremath{\cdots}}%
-    %       \fi
-    %     }
-    % ]{data/points.dat}
+    \pgfplotstabletypeset[
+        col sep=comma,
+        columns/x/.style = {
+            string type,
+            column name = $t$,
+            fixed zerofill,
+            precision=1,
+            dec sep align
+            },
+        columns/y/.style = {
+            column name=$y(t)$,
+            fixed,
+            fixed zerofill,
+            precision=11,
+            dec sep align
+        }
+    ]{data/theor.csv}
 \end{center}
 
 \newpage
