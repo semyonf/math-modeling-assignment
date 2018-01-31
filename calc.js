@@ -11,8 +11,8 @@ const fs = require('fs');
 const
   theoreticalValues     = getFunctionValues(),
   experimentalValues005 = getExperimental(theoreticalValues, 0.05),
-  experimentalValues01 = getExperimental(theoreticalValues, 0.1),
-  experimentalValues02 = getExperimental(theoreticalValues, 0.2);
+  experimentalValues01  = getExperimental(theoreticalValues, 0.1),
+  experimentalValues02  = getExperimental(theoreticalValues, 0.2);
   // тут надо еще с другими коэффициентами (0.1 и 0.2)
 
 /**
@@ -136,7 +136,6 @@ function checkRandomDistribution() {
  */
 function optimize(experimentalValues) {
   let
-    // По условию неизвестны, берем из головы
     b1 = 2, k = 5,
 
     f = getTargetFunction(experimentalValues, getFunctionValues(b1, k)),
@@ -147,7 +146,6 @@ function optimize(experimentalValues) {
     h2 = 0.1,
     steps = [],
 
-    // А это вроде направление, то есть изменяемый параметр
     direction = true;
 
   while (true) {
@@ -192,7 +190,7 @@ function optimize(experimentalValues) {
 /**
  * Сохраняет CSV-файл
  *
- * @param  {String} filename  путь
+ * @param  {String} filename путь
  * @param  {[Any]}  data     массив значений
  * @param  {String} headers  заголовки таблицы
  *
