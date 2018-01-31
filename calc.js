@@ -26,6 +26,7 @@ const optimized = optimize(experimentalValues005);
 createCSV('data/theor.csv', theoreticalValues);
 createCSV('data/noised005.csv', experimentalValues005);
 createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
+createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
 
 /**
  * Вычислить вектор значений функции:
@@ -92,6 +93,22 @@ function getExperimental(theorValues, factor) {
   }
 
   return experimentalValues;
+}
+
+/**
+ * Проверка распределения случайных значений
+ * @return {[Number]} вектор случайных значений по 10 группам
+ */
+function checkRandomDistribution() {
+  const interval = 0.1;
+  let randomNumber, distribution = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  for (var i = 0; i < 10000; ++i) {
+    randomNumber = Math.random();
+    ++distribution[Math.floor(randomNumber / interval)];
+  }
+
+  return distribution;
 }
 
 /**

@@ -1,0 +1,142 @@
+\part{НАХОЖДЕНИЕ $y^T$}
+    \section{Составление системы дифференциальных уравнений}
+        $$
+            W(s) = \frac{k(1-as)}{(1+as)(1+b_1s+b_2s^2)} = \frac{P(s)}{Q(s)}
+        $$
+        \vspace{1cm}
+        $$
+            \begin{cases}
+                \dfrac{1}{Q(s)} = \dfrac{u(s)}{x(s)}
+                \\\\ % Это зашквар, надо будет поправить потом
+                P(s) = \dfrac{y(s)}{u(s)}
+            \end{cases}
+            \Rightarrow
+            \begin{cases}
+                y(s) = k(1-as) \cdot u(s)
+                \\
+                x(s) = (1+as)(1+b_1s+b_2s^2) \cdot u(s)
+            \end{cases}
+        $$
+        \vspace{1cm}
+        $$
+            \begin{aligned}
+                y(s)
+                &= k(1-as) \cdot u(s) \\
+                &= (k-kas) \cdot u(s) \\
+                &= ku(s) - kasu(s)
+                \\\\
+                x(s)
+                &= (1+b_1s + b_2s^2 + as + b_1sas + asb_2s^2) \cdot u(s) \\
+                &= u(s) + b_1su(s) + b_2s^2u(s) + asu(s) + b_1as^2u(s) + as^3b_2u(s)
+            \end{aligned}
+        $$
+        \vspace{1cm}
+        $$
+            \begin{matrix}
+                \begin{matrix}
+                    x(s) \to x(t) \\
+                    y(s) \to y(t) \\
+                    u(s) \to u(t) \\
+                \end{matrix}
+                &
+                S = \dfrac{d}{dt}
+                &
+                S^n = \dfrac{d^n}{dt^n}
+            \end{matrix}
+        $$
+        \vspace{1cm}
+        $$
+            \begin{aligned}
+                y(t) &= ku(t) - ka\dot{u}(t)
+                \\
+                x(t) &= u(t) + b_1\dot{u}(t) + b_2\ddot{u}(t) + a\dot{u}(t) + ab_1\ddot{u}(t) + ab_2\dddot{u}(t)
+            \end{aligned}
+        $$
+        \vspace{1cm}
+        $$
+            \begin{aligned}
+                \dddot{u}(t)
+                &= \frac{1}{ab_2} \cdot (x(t) - u(t) - b_1\dot{u}(t) - b_2\ddot{u}(t) - a\dot{u}(t) - ab_1\ddot{u}(t))
+                \\
+                &= \frac{1}{ab_2} \cdot \underbrace{(x(t) - u(t) - (b_1 + a)\dot{u}(t) - (b_2 + ab_1)\ddot{u}(t))}_{\Omega}
+            \end{aligned}
+        $$
+
+    \section{Замена переменных в системе дифференциальных уравнений}
+        $$
+            \begin{matrix}
+                \begin{aligned}
+                    z_1(t) = &u(t) &
+                    \\
+                    z_2(t) = &\dot{u}(t) = \dot{z_1}(t) &
+                    \\
+                    z_3(t) = &\ddot{u}(t) = \dot{z_2}(t) &
+                    \\
+                    &\dddot{u}(t) = \dot{z_3}(t) = \Omega &
+                \end{aligned}
+                &
+                \Rightarrow
+                &
+                \begin{aligned}
+                    \dot{z_1} &= z_2
+                    \\
+                    \dot{z_2} &= z_3
+                    \\
+                    \dot{z_3} &= \dfrac{\Omega}{ab_2}
+                \end{aligned}
+                &
+                \Rightarrow
+                &
+                y(t) = kz_1 - kaz_2
+            \end{matrix}
+        $$
+
+    \section{Решение системы методом Эйлера}
+        $$
+            \begin{cases}
+                z_{1,n+1} = z_{1,n} + h \cdot z_{2,n}
+                \\
+                z_{2,n+1} = z_{2,n} + h \cdot z_{3,n}
+                \\
+                z_{3,n+1} = z_{3,n} + h \cdot \Omega
+            \end{cases}
+        $$
+        $$
+            y(s) = kz_{1,n} - kaz_{2,n} = k(z_{1,n} - az_{2,n})
+        $$
+
+    \section{График и таблица значений}
+        \begin{center}
+            \begin{tikzpicture}
+                \begin{axis}
+                    \addplot table [col sep=comma] {data/theor.csv};
+                \end{axis}
+            \end{tikzpicture}
+            \vspace{1cm}
+            \pgfplotstabletypeset[
+                col sep=comma,
+                columns/x/.style = {
+                    string type,
+                    column name = $t$,
+                    fixed zerofill,
+                    precision=1,
+                    dec sep align
+                    },
+                columns/y/.style = {
+                    column name=$y(t)$,
+                    fixed,
+                    fixed zerofill,
+                    precision=11,
+                    dec sep align
+                }
+            ]{data/theor.csv}
+        \end{center}
+
+    \section{Проверка}
+        При $x(t) = const (C) = 5$ и $k = 4$
+        $$
+            \lim_{s\to0}CW(s) = C \cdot \lim_{s\to0}\left(\dfrac{k\overbrace{(1-as)}^{\to1}}{\underbrace{(1+as)}_{\to1}\underbrace{(1+b_1s+b_2s^2)}_{\to1}}\right) = C \cdot k = 4 \cdot 5 = 20
+        $$
+
+    \section{Выводы первой части}
+        По полученным данным можно сделать вывод, что полученные значения совпадают с ожидаемыми, полученная функция сходится к значению того пределе, который был вычислен, был выбран период наблюдения в 25 точек, что функция сходится и приходит к периоду покоя быстро и нет смысла увеличивать их количество.
