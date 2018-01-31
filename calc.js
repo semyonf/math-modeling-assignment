@@ -1,24 +1,33 @@
 #!/usr/bin/env node
+
+/**
+ * Внешние модули
+ */
 const fs = require('fs');
 
+/**
+ * Вычисление теоретических, экспериментальных значений
+ */
 const
-  theorValues = calcTheor(),
-  noisedValues005 = calcNoised(theorValues, 0.05);
+  theoreticalValues     = getFunctionValues(),
+  experimentalValues005 = getExperimental(theoreticalValues, 0.05),
+  optimized             = optimize(experimentalValues005);
 
-createCSV('data/theor.csv', theorValues);
-createCSV('data/noised.csv', noisedValues005);
-// createCSV('data/optimized.csv', calcTheor(1.481, 5.7368));
-// createCSV('data/optimized.csv', calcTheor(1.281, 3.9368));
-// createCSV('data/optimized.csv', calcTheor(2.0593, 4.2006));
+createCSV('data/theor.csv', theoreticalValues);
+createCSV('data/noised005.csv', experimentalValues005);
+createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
 
-// optimize();
-// process.exit(1);
-
-///////////////////////////////////////
-// ВЫЧИСЛЕНИЕ ТЕОРЕТИЧЕСКИХ ЗНАЧЕНИЙ //
-///////////////////////////////////////
-
-function calcTheor(b1 = 1, k = 4, addedNoise = null) {
+/**
+ * Вычислить модуль значений функции
+ * если параметры не переданы, то теориетические значения, aka Y(теор.)
+ * или, если переданы параметры, модельные значения, aka Y(м.)
+ *
+ * @param  {Number} [b1] неизвестен по условию
+ * @param  {Number} [k]  неизвестен по условию
+ *
+ * @return {[Number]}    вектор теоретических значений функции
+ */
+function getFunctionValues(b1 = 1, k = 4) {
   const XT = 5, A = 3, B2 = 2, B1 = b1, K = k;
   let y = 0, z1 = 0, z2 = 0, z3 = 0, h = 0.05, theorValues = [];
 
@@ -34,16 +43,112 @@ function calcTheor(b1 = 1, k = 4, addedNoise = null) {
     }
   }
 
-  if (addedNoise) {
-    let res = 0;
-    for (let i = 0; i < theorValues.length; ++i) {
-      res += Math.pow(theorValues[i] - addedNoise[i], 2);
-    }
-  }
-
   return theorValues;
 }
 
+/**
+ * Вычислить целевую функцию
+ *
+ * @param  {[Number]} experimentalValues вектор экспериментальных значений
+ * @param  {[Number]} modelValues        вектор модельных значений
+ *
+ * @return {Number}                      значение целевой функции (тип: 2)
+ */
+function getTargetFunction(experimentalValues, modelValues) {
+  let targetValues = 0;
+  for (let i = 0; i < modelValues.length; ++i) {
+    targetValues += Math.pow(experimentalValues[i] - modelValues[i], 2);
+  }
+
+  return targetValues;
+}
+
+/**
+ * Вычислить экспериментальные значения
+ *
+ * @param  {[Number]} theorValues вектор теоретических значений
+ * @param  {Number} factor        коэффициент зашумления
+ *
+ * @return {[Number]}             вектор экспериментальных значений
+ */
+function getExperimental(theorValues, factor) {
+  const deltaY = Math.max.apply(null, theorValues) * factor;
+  let experimentalValues = theorValues.slice();
+
+  for (let i = 0; i < experimentalValues.length; ++i) {
+    experimentalValues[i] += Math.random() * (2 * deltaY) - deltaY;
+  }
+
+  return experimentalValues;
+}
+
+/**
+ * Оптимизировать методом Гаусса-Зейделя
+ *
+ * @param  {[Number]} experimentalValues экспериментальные значения
+ *
+ * @return {object} объект двух пар ключ:значение
+ */
+function optimize(experimentalValues) {
+  let
+    // По условию неизвестны, берем из головы
+    b1 = 2, k = 5,
+
+    f = getTargetFunction(experimentalValues, getFunctionValues(b1, k)),
+    f1,
+    f2 = f,
+
+    h1 = 0.1,
+    h2 = 0.1,
+
+    m = 1;
+
+  while (true) {
+    if (m == 1) {
+      b1 = b1 + h1;
+      f1 = getTargetFunction(experimentalValues, getFunctionValues(b1, k));
+
+      if (f1 <= f) {
+          h1 = 3 * h1;
+          f = f1;
+      } else {
+          b1 = b1 - h1;
+          h1 = -0.5 * h1;
+      }
+
+      ++m;
+    } else if (m == 2) {
+      k = k + h2;
+      f1 = getTargetFunction(experimentalValues, getFunctionValues(b1, k));
+
+      if (f1 <= f) {
+          h2 = 3 * h2;
+          f = f1;
+      } else {
+          k = k - h2;
+          h2 = -0.5 * h2;
+      }
+
+      m = 1;
+    }
+
+    if (Math.abs(f2 - f1) < 0.0000001) {
+      return {b1, k};
+    }
+
+    f2 = f1;
+  }
+}
+
+/**
+ * Сохраняет CSV-файл
+ *
+ * @param  {String} filename  путь
+ * @param  {[Any]}  data     массив значений
+ * @param  {String} headers  заголовки таблицы
+ *
+ * @return {void}
+ */
 function createCSV(filename, data, headers = 'x, y') {
   let output = `${headers}\n`;
 
@@ -58,69 +163,4 @@ function createCSV(filename, data, headers = 'x, y') {
 
     console.info(`${filename} saved!`);
   });
-}
-
-////////////////
-// ЗАШУМЛЕНИЕ //
-////////////////
-
-function calcNoised(theorValues, factor) {
-  const deltaY = Math.max.apply(null, theorValues) * factor;
-  let noisedValues = theorValues.slice();
-
-  for (let i = 0; i < noisedValues.length; ++i) {
-    noisedValues[i] += Math.random() * (2 * deltaY) - deltaY;
-  }
-
-  return noisedValues;
-}
-
-/////////////////
-// ОПТИМИЗАЦИЯ //
-/////////////////
-
-function optimize() {
-  let b1 = 2, k = 5, f, f1, f2, h1 = 0.1, h2 = 0.1;
-
-  const noisedValues = calcNoised(calcTheor(), 0.05);
-
-  let m = 1;
-
-  f = calcTheor(b1, k, noisedValues);
-  f2 = f;
-
-  while (true) {
-    if (m == 1) {
-      b1 = b1 + h1;
-      f1 = calcTheor(b1, k, noisedValues); // insert function
-      if (f1 <= f) {
-          h1 = 3 * h1;
-          f = f1;
-      } else {
-          b1 = b1 - h1;
-          h1 = -0.5 * h1;
-      }
-      ++m;
-    } else if (m == 2) {
-      k = k + h2;
-      f1 = calcTheor(b1, k, noisedValues); // insert function
-      if (f1 <= f) {
-          h2 = 3 * h2;
-          f = f1;
-      } else {
-          k = k - h2;
-          h2 = -0.5 * h2;
-      }
-      m = 1;
-    }
-
-    console.log(b1, k);
-
-    if (Math.abs(f2 - f1) < 0.05) {
-      break;
-      process.exit(1);
-    }
-
-    f2 = f1;
-  }
 }
