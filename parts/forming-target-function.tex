@@ -1,6 +1,6 @@
 \part{ФОРМИРОВАНИЕ ЦЕЛЕВОЙ ФУНКЦИИ}
     \begin{center}
-        Целевая функция: $CF=\sum(Y_{\text{э}} - Y_{\text{м}})^2$
+        Целевая функция 2: $CF=\sum(Y_{\text{э}} - Y_{\text{м}})^2$
     \end{center}
 
     Неизвестными являются параметры $k$, $b_1$, для оптимизации целевой функции к ней применяется ранее написанный алгоритм. На каждой итерации параметры для расчета нового $y_M$ будут изменяться. Значения остальных переменных остаются такими же, как при вычислении теоретических значений.
@@ -10,15 +10,13 @@
     \begin{center}
         \begin{tabular}{c|c|c|}
         \cline{2-3}
-                                    & k    & $b_1$ \\ \hline
-        \multicolumn{1}{|c|}{$CF1$} & 4.16 & 0.938 \\ \hline
-        \multicolumn{1}{|c|}{$CF2$} & 4.13 & 0.8   \\ \hline
-        \multicolumn{1}{|c|}{$CF3$} & 3.8  & 1.134 \\ \hline
-        \multicolumn{1}{|c|}{$y_{\text{сред}}$}   & 4.03  & 0.96   \\ \hline
+                                    & k    & $b_1$  \\ \hline
+        \multicolumn{1}{|c|}{$CF1$} & 4.037 & 0.931 \\ \hline
+        \multicolumn{1}{|c|}{$CF2$} & 3.936 & 0.958 \\ \hline
+        \multicolumn{1}{|c|}{$CF3$} & 3.918 & 0.940  \\ \hline
+        \multicolumn{1}{|c|}{$y_{\text{сред}}$} & 3.964  & 0.943   \\ \hline
         \end{tabular}
     \end{center}
-
-    Наложим графики.
 
     \begin{center}
         \begin{tikzpicture}
@@ -32,10 +30,78 @@
             ]
 
             \addplot table [col sep=comma] {data/theor.csv};
-            \addplot table [col sep=comma] {data/optimized005.csv};
+            \addlegendentry{$Y_{\text{теор.}}$}
+            \addplot table [col sep=comma] {data/final.csv};
+            \addlegendentry{$Y_{\text{сред.}}$}
 
             \end{axis}
         \end{tikzpicture}
     \end{center}
 
-    Так как график, построенный по теоретическим данным практически совпадает с полученным графиком функции с модельными значениями, можно сделать вывод, что оптимизация выполнена верно.
+    Так как график, построенный по теоретическим данным совпадает с полученным графиком функции с модельными значениями, можно сделать вывод, что оптимизация выполнена верно.
+
+    \pgfplotstabletypeset[
+        col sep=comma,
+        columns/b1/.style = {
+            string type,
+            column name = $b_1$,
+            precision=1,
+            dec sep align
+            },
+        columns/k/.style = {
+            column name=$k$,
+            fixed,
+            precision=11,
+            dec sep align
+        },
+        columns/CF1/.style = {
+            column name=$CF1$,
+            fixed,
+            precision=11,
+            dec sep align
+        }
+    ]{data/precomputed/optsteps-cf1.csv}
+
+    \pgfplotstabletypeset[
+        col sep=comma,
+        columns/b1/.style = {
+            string type,
+            column name = $b_1$,
+            precision=1,
+            dec sep align
+            },
+        columns/k/.style = {
+            column name=$k$,
+            fixed,
+            precision=11,
+            dec sep align
+        },
+        columns/CF1/.style = {
+            column name=$CF1$,
+            fixed,
+            precision=11,
+            dec sep align
+        }
+    ]{data/precomputed/optsteps-cf2.csv}
+
+    \pgfplotstabletypeset[
+        col sep=comma,
+        columns/b1/.style = {
+            string type,
+            column name = $b_1$,
+            precision=1,
+            dec sep align
+            },
+        columns/k/.style = {
+            column name=$k$,
+            fixed,
+            precision=11,
+            dec sep align
+        },
+        columns/CF1/.style = {
+            column name=$CF1$,
+            fixed,
+            precision=11,
+            dec sep align
+        }
+    ]{data/precomputed/optsteps-cf3.csv}

@@ -6,9 +6,8 @@ const
   experimentalValues005 = getExperimental(theoreticalValues, 0.05),
   experimentalValues01 = getExperimental(theoreticalValues, 0.1),
   experimentalValues02 = getExperimental(theoreticalValues, 0.2),
-  optimized005 = optimize(function(b1, k) {
-      // Вычислить целевую функцию, aka CF (тип по заданию: 2)
-      let experimentalValues = experimentalValues005.slice();
+  optimized = optimize(function(b1, k) {
+      let experimentalValues = experimentalValues02.slice();
       const modelValues = getFunctionValues(b1, k);
 
       let value = 0;
@@ -18,7 +17,7 @@ const
 
       return value;
   }, 2, 5);
-  // Вычислены заранее
+  // Precomputed
   // optimizedEllipse = optimize(function(x, y) {
   //   return Math.sqrt(x*x + y*y);
   // }, 4, 3),
@@ -32,7 +31,10 @@ createCSV('data/noised005.csv', experimentalValues005);
 createCSV('data/noised01.csv', experimentalValues01);
 createCSV('data/noised02.csv', experimentalValues02);
 
-createCSV('data/optimized005.csv', getFunctionValues(optimized005.b1, optimized005.k));
+createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
+console.log(optimized.steps);
+
+createCSV('data/final.csv', getFunctionValues(0.943, 3.964));
 
 // createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
 
@@ -151,7 +153,7 @@ function optimize(callback, startX, startY) {
     if (Math.abs(f2 - f1) < 1e-5) {
       return {b1, k, steps};
     } else {
-      steps.push(`${b1}, ${k}`);
+      steps.push(`${b1}, ${k}, ${f1}`);
     }
 
     f2 = f1;
