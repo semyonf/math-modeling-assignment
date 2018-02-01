@@ -105,9 +105,9 @@ function checkRandomDistribution() {
 
 function optimize(callback, startX, startY) {
   let
-    b1 = startX, k = startY,
+    x = startX, y = startY,
 
-    f = callback(b1, k),
+    f = callback(x, y),
     f1,
     f2 = f,
 
@@ -119,27 +119,27 @@ function optimize(callback, startX, startY) {
 
   while (true) {
     if (m == 1) {
-      b1 = b1 + h1;
-      f1 = callback(b1, k);
+      x = x + h1;
+      f1 = callback(x, y);
 
       if (f1 <= f) {
           h1 = 3 * h1;
           f = f1;
       } else {
-          b1 = b1 - h1;
+          x = x - h1;
           h1 = -0.5 * h1;
       }
 
       ++m;
     } else if (m != 1) {
-      k = k + h2;
-      f1 = callback(b1, k);
+      y = y + h2;
+      f1 = callback(x, y);
 
       if (f1 <= f) {
           h2 = 3 * h2;
           f = f1;
       } else {
-          k = k - h2;
+          y = y - h2;
           h2 = -0.5 * h2;
       }
 
@@ -147,9 +147,9 @@ function optimize(callback, startX, startY) {
     }
 
     if (Math.abs(f2 - f1) < 1e-5) {
-      return {b1, k, steps};
+      return {x, y, steps};
     } else {
-      steps.push(`${b1}, ${k}, ${f1}`);
+      steps.push(`${x}, ${y}, ${f1}`);
     }
 
     f2 = f1;
