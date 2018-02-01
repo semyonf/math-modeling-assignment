@@ -29,7 +29,6 @@ createCSV(
   theoreticalValues
 );
 
-
 createCSV(
   'data/noised005.csv',
   experimentalValues005
@@ -45,25 +44,22 @@ createCSV(
   experimentalValues02
 );
 
-
 createCSV(
   'data/optimized.csv',
   getFunctionValues(optimized.b1, optimized.k)
 );
 
-console.log(optimized.steps);
+// console.log(optimized.steps);
 
 createCSV(
   'data/final.csv',
-  getFunctionValues(0.943, 3.964)
+  getFunctionValues(0.973, 3.984)
 );
-
 
 createCSV(
   'data/rnd.csv',
   checkRandomDistribution(), 'intrval, occurences'
 );
-
 
 function getFunctionValues(b1 = 1, k = 4) {
   const XT = 5, A = 3, B2 = 2, B1 = b1, K = k;
