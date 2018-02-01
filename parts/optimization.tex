@@ -1,45 +1,42 @@
 \part{ОПТИМИЗАЦИЯ}
-    Метод Гаусса-Зейделя ($GZ_1$) сводит задачу поиска наименьшего значения функции нескольких переменных к многократному решению одномерных задач оптимизации, по сути это постепенное в многократном цикле сдвигание к результату.
-    \setcounter{section}{0}
-    \section{Алгоритм метода оптимизации $GZ_1$}
+    Метод Гаусса-Зейделя ($GZ_1$) сводит задачу поиска наименьшего значения функции нескольких переменных к многократному решению одномерных задач оптимизации, по сути - это постепенное, в многократном цикле, сдвигание к результату по координатным ортам.
+    \section*{Алгоритм метода оптимизации $GZ_1$}
         \begin{center}
-            \includegraphics[scale=.6]{img/gz1-alg}
+            \includegraphics[scale=0.7]{img/gz1-alg}
         \end{center}
-        Выход из алгоритма осуществляется по достижении заданного числа вычислений $J$. В данном случае целесообразно отказаться от применения каких-либо внутренних критериев сходимости процесса оптимизации и обрывать его после заранее обусловленного числа шагов.
+        Выход из алгоритма осуществляется по достижении заданного числа вычислений $J$ или при достижении необходимой сходимости.
 
-    \section{Проверка работоспособности}
-        Проверка работоспособности функции была произведена на двух канонических функциях при различных начальных условиях. Для функции Розенброка значение функции стремилось всегда к $0$, а $x1, x2$ к 1. Для квадратичной функции все неизвестные стремились к $0$.
+    \section*{Проверка работоспособности}
+        \subsection*{Функция эллипса $r^2 = x^2 + y^2$}
+            \begin{tikzpicture}
+                \begin{axis}[
+                        width=16cm,
+                        height=10cm,
+                        xlabel=x,
+                        ylabel=y,
+                        minor tick num = 1,
+                        grid = both
+                    ]
+                    \addplot table [col sep=comma, x index=1, y index=2] {data/ellipse.csv};
+                \end{axis}
+            \end{tikzpicture}
 
-        \subsection{Функция Розенброка}
-        %     \begin{center}
-        %         \begin{tikzpicture}
-        %             \begin{axis}[
-        %                 width=16cm,
-        %                 height=10cm,
-        %                 samples=1,
-        %                 minor tick num = 1,
-        %                 grid = both
-        %             ]
+            Точка минимума $(0;0)$
 
-        %             \addplot[gr1] table {data/2points.dat};
+        \subsection*{Функция Розенброка $z = (1 - x)^2 + 100 \times (y - x^2)^2$}
+            \begin{tikzpicture}
+                \begin{axis}[
+                        width=16cm,
+                        height=10cm,
+                        xlabel=x,
+                        ylabel=y,
+                        minor tick num = 1,
+                        grid = both
+                    ]
+                    \addplot table [col sep=comma, x index=1, y index=2] {data/rosenbrock.csv};
+                \end{axis}
+            \end{tikzpicture}
 
-        %             \end{axis}
-        %         \end{tikzpicture}
-        %     \end{center}
+            Точка минимума $(1;1)$
 
-        \subsection{Квадратичная функция}
-        %     \begin{center}
-        %         \begin{tikzpicture}
-        %             \begin{axis}[
-        %                 width=16cm,
-        %                 height=10cm,
-        %                 samples=1,
-        %                 minor tick num = 1,
-        %                 grid = both
-        %             ]
-
-        %             \addplot[gr1] table {data/3points.dat};
-
-        %             \end{axis}
-        %         \end{tikzpicture}
-        %     \end{center}
+        Из представленных выше графиков можно сделать вывод о том, что метод оптимизации реализован верно.
