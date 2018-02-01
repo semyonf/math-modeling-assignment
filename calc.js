@@ -3,7 +3,9 @@ const fs = require('fs');
 
 const
   theoreticalValues     = getFunctionValues(),
-  experimentalValues005 = getExperimental(theoreticalValues, 0.2),
+  experimentalValues005 = getExperimental(theoreticalValues, 0.05),
+  experimentalValues01 = getExperimental(theoreticalValues, 0.1),
+  experimentalValues02 = getExperimental(theoreticalValues, 0.2),
   optimized005 = optimize(function(b1, k) {
       // Вычислить целевую функцию, aka CF (тип по заданию: 2)
       let experimentalValues = experimentalValues005.slice();
@@ -27,6 +29,8 @@ const
 createCSV('data/theor.csv', theoreticalValues);
 
 createCSV('data/noised005.csv', experimentalValues005);
+createCSV('data/noised01.csv', experimentalValues01);
+createCSV('data/noised02.csv', experimentalValues02);
 
 createCSV('data/optimized005.csv', getFunctionValues(optimized005.b1, optimized005.k));
 
