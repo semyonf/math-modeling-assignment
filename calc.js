@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const
   theoreticalValues     = getFunctionValues(),
-  experimentalValues005 = getExperimental(theoreticalValues, 0.2);
+  experimentalValues005 = getExperimental(theoreticalValues, 0.2),
   optimized005 = optimize(function(b1, k) {
       // Вычислить целевую функцию, aka CF (тип по заданию: 2)
       let experimentalValues = experimentalValues005.slice();
@@ -15,7 +15,14 @@ const
       }
 
       return value;
-  });
+  }, 2, 5);
+  // Вычислены заранее
+  // optimizedEllipse = optimize(function(x, y) {
+  //   return Math.sqrt(x*x + y*y);
+  // }, 4, 3),
+  // optimizedRosenbrock = optimize(function(x, y) {
+  //   return ((1-x)*(1-x)) + 100 * ((y - x*x) * (y - x*x));
+  // }, -5, -3);
 
 createCSV('data/theor.csv', theoreticalValues);
 
@@ -23,9 +30,7 @@ createCSV('data/noised005.csv', experimentalValues005);
 
 createCSV('data/optimized005.csv', getFunctionValues(optimized005.b1, optimized005.k));
 
-createCSV('data/steps005.csv', optimized005.steps, 'iteration, b1, k, CF');
-
-createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
+// createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
 
 /**
  * Вычислить вектор значений функции:
@@ -96,9 +101,9 @@ function checkRandomDistribution() {
  *
  * @return {object} объект двух пар ключ:значение
  */
-function optimize(callback) {
+function optimize(callback, startX, startY) {
   let
-    b1 = 2, k = 5,
+    b1 = startX, k = startY,
 
     f = callback(b1, k),
     f1,
@@ -108,10 +113,10 @@ function optimize(callback) {
     h2 = 0.1,
     steps = [],
 
-    direction = true;
+    m = 1;
 
   while (true) {
-    if (direction) {
+    if (m == 1) {
       b1 = b1 + h1;
       f1 = callback(b1, k);
 
@@ -123,8 +128,8 @@ function optimize(callback) {
           h1 = -0.5 * h1;
       }
 
-      direction = false;
-    } else if (!direction) {
+      ++m;
+    } else if (m != 1) {
       k = k + h2;
       f1 = callback(b1, k);
 
@@ -136,13 +141,13 @@ function optimize(callback) {
           h2 = -0.5 * h2;
       }
 
-      direction = true;
+      m = 1;
     }
 
     if (Math.abs(f2 - f1) < 1e-5) {
       return {b1, k, steps};
     } else {
-      steps.push(`${b1}, ${k}, ${f1}`);
+      steps.push(`${b1}, ${k}`);
     }
 
     f2 = f1;
