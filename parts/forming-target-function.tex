@@ -14,7 +14,7 @@
         \multicolumn{1}{|c|}{$CF1$} & 4.037 & 0.931 \\ \hline
         \multicolumn{1}{|c|}{$CF2$} & 3.936 & 0.958 \\ \hline
         \multicolumn{1}{|c|}{$CF3$} & 3.918 & 0.940  \\ \hline
-        \multicolumn{1}{|c|}{$y_{\text{сред}}$} & 3.964  & 0.943   \\ \hline
+        \multicolumn{1}{|c|}{$Y_{\text{сред}}$} & 3.964  & 0.943   \\ \hline
         \end{tabular}
     \end{center}
 
@@ -29,10 +29,10 @@
                 legend style={at={(0.5,-0.1)},anchor=north}
             ]
 
-            \addplot table [col sep=comma] {data/theor.csv};
-            \addlegendentry{$Y_{\text{теор.}}$}
             \addplot table [col sep=comma] {data/final.csv};
             \addlegendentry{$Y_{\text{сред.}}$}
+            \addplot table [col sep=comma] {data/theor.csv};
+            \addlegendentry{$Y_{\text{теор.}}$}
 
             \end{axis}
         \end{tikzpicture}
