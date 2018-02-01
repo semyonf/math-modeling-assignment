@@ -44,12 +44,20 @@
                         xlabel=x,
                         ylabel=y,
                         minor tick num = 1,
-                        grid = both
+                        grid = both,
+                        legend style={at={(0.5,-0.1)},anchor=north}
                     ]
                     \addplot table [col sep=comma] {data/theor.csv};
+                    \addlegendentry{$Y_{\text{теор.}}$}
+
                     \addplot table [col sep=comma] {data/noised005.csv};
+                    \addlegendentry{$Y_{\text{Э}}(0.05)$}
+
                     \addplot table [col sep=comma] {data/noised01.csv};
+                    \addlegendentry{$Y_{\text{Э}}(0.1)$}
+
                     \addplot table [col sep=comma] {data/noised02.csv};
+                    \addlegendentry{$Y_{\text{Э}}(0.2)$}
                 \end{axis}
             \end{tikzpicture}
         \end{center}
