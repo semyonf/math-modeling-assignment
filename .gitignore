@@ -1,3 +1,5 @@
 out
-data
+data/*
+!data/precomputed
+!data/precomputed/*
 .DS_Store
