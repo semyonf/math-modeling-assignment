@@ -5,7 +5,6 @@ CALC = ./calc.js
 all: calc pdf clean
 
 calc:
-	$(CALC) report.tex
 	if [ ! -d 'data' ];    \
 		then mkdir 'data'; \
 	fi
