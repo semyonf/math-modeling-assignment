@@ -3,30 +3,25 @@
 \input{preamble.tex}
 
 \begin{document}
-
-% \begin{tikzpicture}
-%     \begin{axis}
-%         \addplot table [col sep=comma] {data/theor.csv};
-%     \end{axis}
-% \end{tikzpicture}
-
-% \begin{tikzpicture}
-%     \begin{axis}
-%         \addplot table [col sep=comma] {data/noised005.csv};
-%     \end{axis}
-% \end{tikzpicture}
-
-% \begin{tikzpicture}
-%     \begin{axis}
-%         \addplot table [col sep=comma] {data/theor.csv};
-%         \addplot table [col sep=comma] {data/optimized005.csv};
-%     \end{axis}
-% \end{tikzpicture}
-
-% \input{parts/title.tex}
-% \input{parts/finding-Y-theoretical.tex}
-% \input{parts/optimization.tex}
-% \input{parts/generating-noise.tex}
+\input{parts/title.tex}
+\input{parts/finding-Y-theoretical.tex}
+\input{parts/optimization.tex}
+\input{parts/generating-noise.tex}
 \input{parts/forming-target-function.tex}
+
+\lstset{
+    frame=tb,
+    tabsize=4,
+    showstringspaces=false,
+    numbers=left,
+    commentstyle=\color{green},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red}
+}
+
+\newpage
+\part*{ПРИЛОЖЕНИЯ}
+    \section*{Листинг кода}
+        \lstinputlisting{calc.js}
 
 \end{document}

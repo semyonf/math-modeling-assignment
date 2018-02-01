@@ -7,17 +7,16 @@ const
   experimentalValues01 = getExperimental(theoreticalValues, 0.1),
   experimentalValues02 = getExperimental(theoreticalValues, 0.2),
   optimized = optimize(function(b1, k) {
-      let experimentalValues = experimentalValues02.slice();
-      const modelValues = getFunctionValues(b1, k);
+    let experimentalValues = experimentalValues02.slice();
+    const modelValues = getFunctionValues(b1, k);
 
-      let value = 0;
-      for (let i = 0; i < modelValues.length; ++i) {
-        value += Math.pow(experimentalValues[i] - modelValues[i], 2);
-      }
+    let value = 0;
+    for (let i = 0; i < modelValues.length; ++i) {
+      value += Math.pow(experimentalValues[i] - modelValues[i], 2);
+    }
 
-      return value;
+    return value;
   }, 2, 5);
-  // Precomputed
   // optimizedEllipse = optimize(function(x, y) {
   //   return Math.sqrt(x*x + y*y);
   // }, 4, 3),
@@ -25,29 +24,47 @@ const
   //   return ((1-x)*(1-x)) + 100 * ((y - x*x) * (y - x*x));
   // }, -5, -3);
 
-createCSV('data/theor.csv', theoreticalValues);
+createCSV(
+  'data/theor.csv',
+  theoreticalValues
+);
 
-createCSV('data/noised005.csv', experimentalValues005);
-createCSV('data/noised01.csv', experimentalValues01);
-createCSV('data/noised02.csv', experimentalValues02);
 
-createCSV('data/optimized.csv', getFunctionValues(optimized.b1, optimized.k));
+createCSV(
+  'data/noised005.csv',
+  experimentalValues005
+);
+
+createCSV(
+  'data/noised01.csv',
+  experimentalValues01
+);
+
+createCSV(
+  'data/noised02.csv',
+  experimentalValues02
+);
+
+
+createCSV(
+  'data/optimized.csv',
+  getFunctionValues(optimized.b1, optimized.k)
+);
+
 console.log(optimized.steps);
 
-createCSV('data/final.csv', getFunctionValues(0.943, 3.964));
+createCSV(
+  'data/final.csv',
+  getFunctionValues(0.943, 3.964)
+);
 
-// createCSV('data/rnd.csv', checkRandomDistribution(), 'intrval, occurences');
 
-/**
- * Вычислить вектор значений функции:
- * - если параметры не переданы, то теориетические значения, aka Y(теор.)
- * - если переданы параметры, модельные значения, aka Y(м.)
- *
- * @param  {Number} [b1] неизвестен по условию
- * @param  {Number} [k]  неизвестен по условию
- *
- * @return {[Number]}    вектор теоретических значений функции
- */
+createCSV(
+  'data/rnd.csv',
+  checkRandomDistribution(), 'intrval, occurences'
+);
+
+
 function getFunctionValues(b1 = 1, k = 4) {
   const XT = 5, A = 3, B2 = 2, B1 = b1, K = k;
   let y = 0, z1 = 0, z2 = 0, z3 = 0, h = 0.05, theorValues = [];
@@ -67,14 +84,6 @@ function getFunctionValues(b1 = 1, k = 4) {
   return theorValues;
 }
 
-/**
- * Вычислить экспериментальные значения, aka Y(э)
- *
- * @param  {[Number]} theorValues вектор теоретических значений
- * @param  {Number}   factor      коэффициент зашумления
- *
- * @return {[Number]}             вектор экспериментальных значений
- */
 function getExperimental(theorValues, factor) {
   const deltaY = Math.max.apply(null, theorValues) * factor;
   let experimentalValues = theorValues.slice();
@@ -86,10 +95,6 @@ function getExperimental(theorValues, factor) {
   return experimentalValues;
 }
 
-/**
- * Проверка распределения случайных значений
- * @return {[Number]} вектор случайных значений по 10 группам
- */
 function checkRandomDistribution() {
   const interval = 0.1;
   let randomNumber, distribution = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -102,11 +107,6 @@ function checkRandomDistribution() {
   return distribution;
 }
 
-/**
- * Оптимизация методом Гаусса-Зейделя
- *
- * @return {object} объект двух пар ключ:значение
- */
 function optimize(callback, startX, startY) {
   let
     b1 = startX, k = startY,
@@ -160,15 +160,6 @@ function optimize(callback, startX, startY) {
   }
 }
 
-/**
- * Сохраняет CSV-файл
- *
- * @param  {String} filename путь
- * @param  {[Any]}  data     массив значений
- * @param  {String} headers  заголовки таблицы
- *
- * @return {void}
- */
 function createCSV(filename, data, headers = 'x, y') {
   let output = `${headers}\n`;
 
@@ -181,6 +172,6 @@ function createCSV(filename, data, headers = 'x, y') {
       return console.error(err);
     }
 
-    console.info(`Файл ${filename} записан!`);
+    console.info(`${filename} done!`);
   });
 }
