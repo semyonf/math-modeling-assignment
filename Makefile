@@ -32,4 +32,6 @@ run:
 	fi
 
 clean:
-	rm -fv program/bin/* program/obj/* dat/*.csv;
+	rm -fv program/bin/* program/obj/* data/*.csv \
+	*.aux *.bbl *.blg *.lof *.out *.pdf *.snm *.vrb \
+	*.toc *.log *.lol *.lot *.nav *.bak *.loa *.thm

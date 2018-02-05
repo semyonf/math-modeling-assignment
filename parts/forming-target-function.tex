@@ -11,7 +11,7 @@
         \begin{tabular}{c|c|c|}
         \cline{2-3}
                                     & k    & $b_1$  \\ \hline
-        \multicolumn{1}{|c|}{$CF1$} & 4.037 & 0.931 \\ \hline
+        \multicolumn{1}{|c|}{$CF1$} & 3.037 & 0.931 \\ \hline
         \multicolumn{1}{|c|}{$CF2$} & 3.936 & 0.958 \\ \hline
         \multicolumn{1}{|c|}{$CF3$} & 3.918 & 0.940  \\ \hline
         \multicolumn{1}{|c|}{$Y_{\text{сред}}$} & 3.964  & 0.943   \\ \hline
@@ -39,69 +39,3 @@
     \end{center}
 
     Так как график, построенный по теоретическим данным совпадает с полученным графиком функции с модельными значениями, можно сделать вывод, что оптимизация выполнена верно.
-
-    \pgfplotstabletypeset[
-        col sep=comma,
-        columns/b1/.style = {
-            string type,
-            column name = $b_1$,
-            precision=1,
-            dec sep align
-            },
-        columns/k/.style = {
-            column name=$k$,
-            fixed,
-            precision=11,
-            dec sep align
-        },
-        columns/CF1/.style = {
-            column name=$CF1$,
-            fixed,
-            precision=11,
-            dec sep align
-        }
-    ]{data/precomputed/optsteps-cf1.csv}
-
-    \pgfplotstabletypeset[
-        col sep=comma,
-        columns/b1/.style = {
-            string type,
-            column name = $b_1$,
-            precision=1,
-            dec sep align
-            },
-        columns/k/.style = {
-            column name=$k$,
-            fixed,
-            precision=11,
-            dec sep align
-        },
-        columns/CF1/.style = {
-            column name=$CF1$,
-            fixed,
-            precision=11,
-            dec sep align
-        }
-    ]{data/precomputed/optsteps-cf2.csv}
-
-    \pgfplotstabletypeset[
-        col sep=comma,
-        columns/b1/.style = {
-            string type,
-            column name = $b_1$,
-            precision=1,
-            dec sep align
-            },
-        columns/k/.style = {
-            column name=$k$,
-            fixed,
-            precision=11,
-            dec sep align
-        },
-        columns/CF1/.style = {
-            column name=$CF1$,
-            fixed,
-            precision=11,
-            dec sep align
-        }
-    ]{data/precomputed/optsteps-cf3.csv}

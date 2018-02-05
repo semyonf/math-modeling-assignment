@@ -8,6 +8,7 @@ program calc
 
     integer :: i
     real(8) :: RANDOM(data_len), Y_theor(data_len), Y_exp(3, data_len), optim_b1(3), optim_k(3)
+    real(8) :: Y_final(data_len)
 
     do i = 1, data_len
         RANDOM(i) = rand()
@@ -16,34 +17,38 @@ program calc
     call calc_model(b1_act, k_act, Y_theor)
     call calc_experimental(Y_theor, Y_exp)
 
-    open (file="dat/theor.csv", encoding=E_, newunit=Out)
+    open (file="data/theor.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_theor(i), i = 1, data_len)
     close (Out)
 
-    open (file="dat/exp1.csv", encoding=E_, newunit=Out)
+    open (file="data/exp1.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_exp(1, i), i = 1, data_len)
     close (Out)
 
-    open (file="dat/exp2.csv", encoding=E_, newunit=Out)
+    open (file="data/exp2.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_exp(2, i), i = 1, data_len)
     close (Out)
 
-    open (file="dat/exp3.csv", encoding=E_, newunit=Out)
+    open (file="data/exp3.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_exp(3, i), i = 1, data_len)
     close (Out)
-
-    ! write(*, '(i2, ",", f8.4)') (i, Y_exp(1,i), i = 1, data_len)
 
     do concurrent (i=1:3)
         call optimize(b1_fake, k_fake, optim_b1(i), optim_k(i), Y_exp(i,:))
     enddo
 
-    ! write(*, '("CF", i1, ":  ", "b1=", f6.4,"  k=", f6.4)') (i, optim_b1(i), optim_k(i), i = 1, 3)
-    ! write(*,*) sum(optim_b1) / 3, sum(optim_k) / 3
+    call calc_model(sum(optim_b1) / 3, sum(optim_k) / 3, Y_final)
+
+    open (file="data/final.csv", encoding=E_, newunit=Out)
+        write(Out, '("x, y")')
+        write(Out, '(i2, ",", f8.4)') (i, Y_final(i), i = 1, data_len)
+    close (Out)
+
+    write(*, '("CF", i1, ":  ", "b1=", f6.4,"  k=", f6.4)') (i, optim_b1(i), optim_k(i), i = 1, 3)
 
 contains
 
