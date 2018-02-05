@@ -4,7 +4,7 @@ TEX=pdflatex
 
 FORTRAN=gfortran
 CFLAGS=-Wall -std=f2008ts -fimplicit-none -ftree-vectorizer-verbose=2 \
--Wno-maybe-uninitialized -static-libgfortran -flto
+-Wno-maybe-uninitialized -Wintrinsics-std -static-libgfortran -flto -fall-intrinsics
 
 all:calc
 # all:calc pdf
