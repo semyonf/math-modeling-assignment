@@ -1,21 +1,29 @@
 .PHONY:calc pdf clean
-TEX = pdflatex
-CALC = ./calc.js
 
-all: calc pdf clean
+TEX=pdflatex
 
-calc:
-	if [ ! -d 'data' ];    \
-		then mkdir 'data'; \
-	fi
-	./$(CALC)
+FORTRAN=gfortran
+CFLAGS=-Wall -std=f2008ts -fimplicit-none -ftree-vectorizer-verbose=2 \
+-Wno-maybe-uninitialized -Wintrinsics-std -static-libgfortran -flto -fall-intrinsics
+
+all:calc pdf
+
+calc: program/bin/calc
+	if [ ! -d 'data' ]; then mkdir 'data'; fi
+	./program/bin/calc
+
+program/bin/calc: program/calc.f08
+	if [ ! -d 'program/bin' ]; then mkdir 'program/bin'; fi
+	$(FORTRAN) $(CFLAGS) program/calc.f08 -o program/bin/calc
 
 pdf:
 	$(TEX) report.tex
-	if [ ! -d 'out' ];    \
-		then mkdir 'out'; \
-	fi
+	if [ ! -d 'out' ]; then mkdir 'out'; fi
 	mv report.pdf out/report.pdf
+	rm -fv *.aux *.bbl *.blg *.lof \
+	*.out *.pdf *.snm *.vrb *.toc  \
+	*.log *.lol *.lot *.nav *.bak  \
+	*.loa *.thm
 
 run:
 	if [ ! -r 'out/report.pdf' ];    \
@@ -24,7 +32,6 @@ run:
 	fi
 
 clean:
-	rm -fv *.aux *.bbl *.blg *.lof \
-	*.out *.pdf *.snm *.vrb *.toc  \
-	*.log *.lol *.lot *.nav *.bak  \
-	*.loa *.thm
+	rm -fv program/bin/* program/obj/* data/*.csv \
+	*.aux *.bbl *.blg *.lof *.out *.pdf *.snm *.vrb \
+	*.toc *.log *.lol *.lot *.nav *.bak *.loa *.thm

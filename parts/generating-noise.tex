@@ -28,7 +28,7 @@
         \begin{center}
             \begin{tikzpicture}
                 \begin{axis}[ybar, ymin=0, ymax=1200]
-                    \addplot [fill, color=blue] table [col sep=comma] {data/rnd.csv};
+                    \addplot [fill, color=blue] table [col sep=comma] {data/precomputed/uniform-random.csv};
                     Гистограммы отражают исправную работу ГСЧ.
                 \end{axis}
             \end{tikzpicture}
@@ -50,13 +50,13 @@
                     \addplot table [col sep=comma] {data/theor.csv};
                     \addlegendentry{$Y_{\text{теор.}}$}
 
-                    \addplot table [col sep=comma] {data/noised005.csv};
+                    \addplot table [col sep=comma] {data/exp1.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.05)$}
 
-                    \addplot table [col sep=comma] {data/noised01.csv};
+                    \addplot table [col sep=comma] {data/exp2.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.1)$}
 
-                    \addplot table [col sep=comma] {data/noised02.csv};
+                    \addplot table [col sep=comma] {data/exp3.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.2)$}
                 \end{axis}
             \end{tikzpicture}
