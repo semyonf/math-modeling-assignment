@@ -6,8 +6,7 @@ FORTRAN=gfortran
 CFLAGS=-Wall -std=f2008ts -fimplicit-none -ftree-vectorizer-verbose=2 \
 -Wno-maybe-uninitialized -Wintrinsics-std -static-libgfortran -flto -fall-intrinsics
 
-all:calc
-# all:calc pdf
+all:calc pdf
 
 calc: program/bin/calc
 	if [ ! -d 'data' ]; then mkdir 'data'; fi
