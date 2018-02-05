@@ -1,12 +1,12 @@
 program calc
     implicit none
 
-    character(*), parameter :: E_ = "UTF-8"
+    character(*), parameter :: E_ = "UTF-8", noise_paths(3) = (/"data/exp1.csv", "data/exp2.csv", "data/exp3.csv"/)
     integer :: Out
     integer, parameter :: data_len = 25
     real(8), parameter :: b1_act = 1.0, k_act = 4.0, b1_fake = 2.0, k_fake = 5.0
 
-    integer :: i
+    integer :: i, j
     real(8) :: RANDOM(data_len), Y_theor(data_len), Y_exp(3, data_len), optim_b1(3), optim_k(3)
     real(8) :: Y_final(data_len)
 
@@ -17,24 +17,16 @@ program calc
     call calc_model(b1_act, k_act, Y_theor)
     call calc_experimental(Y_theor, Y_exp)
 
+    do j = 1, 3
+        open (file=noise_paths(j), encoding=E_, newunit=Out)
+            write(Out, '("x, y")')
+            write(Out, '(i2, ",", f8.4)') (i, Y_exp(j, i), i = 1, data_len)
+        close (Out)
+    enddo
+
     open (file="data/theor.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_theor(i), i = 1, data_len)
-    close (Out)
-
-    open (file="data/exp1.csv", encoding=E_, newunit=Out)
-        write(Out, '("x, y")')
-        write(Out, '(i2, ",", f8.4)') (i, Y_exp(1, i), i = 1, data_len)
-    close (Out)
-
-    open (file="data/exp2.csv", encoding=E_, newunit=Out)
-        write(Out, '("x, y")')
-        write(Out, '(i2, ",", f8.4)') (i, Y_exp(2, i), i = 1, data_len)
-    close (Out)
-
-    open (file="data/exp3.csv", encoding=E_, newunit=Out)
-        write(Out, '("x, y")')
-        write(Out, '(i2, ",", f8.4)') (i, Y_exp(3, i), i = 1, data_len)
     close (Out)
 
     do concurrent (i=1:3)
