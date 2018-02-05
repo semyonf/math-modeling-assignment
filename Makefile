@@ -32,4 +32,4 @@ run:
 	fi
 
 clean:
-	rm -fv program/bin/* program/obj/*;
+	rm -fv program/bin/* program/obj/* dat/*.csv;
