@@ -47,16 +47,16 @@
                         grid = both,
                         legend style={at={(0.5,-0.1)},anchor=north}
                     ]
-                    \addplot table [col sep=comma] {data/theor.csv};
+                    \addplot table [col sep=comma] {dat/theor.csv};
                     \addlegendentry{$Y_{\text{теор.}}$}
 
-                    \addplot table [col sep=comma] {data/noised005.csv};
+                    \addplot table [col sep=comma] {dat/exp1.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.05)$}
 
-                    \addplot table [col sep=comma] {data/noised01.csv};
+                    \addplot table [col sep=comma] {dat/exp2.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.1)$}
 
-                    \addplot table [col sep=comma] {data/noised02.csv};
+                    \addplot table [col sep=comma] {dat/exp3.csv};
                     \addlegendentry{$Y_{\text{Э}}(0.2)$}
                 \end{axis}
             \end{tikzpicture}

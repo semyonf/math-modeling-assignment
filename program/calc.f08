@@ -1,7 +1,7 @@
 program calc
     implicit none
 
-    character(*), parameter :: theor = "dat/theor.csv", E_ = "UTF-8"
+    character(*), parameter :: E_ = "UTF-8"
     integer :: Out
     integer, parameter :: data_len = 25
     real(8), parameter :: b1_act = 1.0, k_act = 4.0, b1_fake = 2.0, k_fake = 5.0
@@ -16,9 +16,24 @@ program calc
     call calc_model(b1_act, k_act, Y_theor)
     call calc_experimental(Y_theor, Y_exp)
 
-    open (file=theor, encoding=E_, newunit=Out)
+    open (file="dat/theor.csv", encoding=E_, newunit=Out)
         write(Out, '("x, y")')
         write(Out, '(i2, ",", f8.4)') (i, Y_theor(i), i = 1, data_len)
+    close (Out)
+
+    open (file="dat/exp1.csv", encoding=E_, newunit=Out)
+        write(Out, '("x, y")')
+        write(Out, '(i2, ",", f8.4)') (i, Y_exp(1, i), i = 1, data_len)
+    close (Out)
+
+    open (file="dat/exp2.csv", encoding=E_, newunit=Out)
+        write(Out, '("x, y")')
+        write(Out, '(i2, ",", f8.4)') (i, Y_exp(2, i), i = 1, data_len)
+    close (Out)
+
+    open (file="dat/exp3.csv", encoding=E_, newunit=Out)
+        write(Out, '("x, y")')
+        write(Out, '(i2, ",", f8.4)') (i, Y_exp(3, i), i = 1, data_len)
     close (Out)
 
     ! write(*, '(i2, ",", f8.4)') (i, Y_exp(1,i), i = 1, data_len)
