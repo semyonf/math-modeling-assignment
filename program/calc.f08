@@ -8,12 +8,17 @@ program calc
 
     integer :: i, j
     real(8) :: Y_theor(data_len), Y_exp(3, data_len), optim_b1(3), optim_k(3)
-    real(8) :: Y_final(data_len)
+    real(8) :: Y_final(data_len), random_data(3, data_len)
 
     call random_seed()
 
+    ! Generate independent random data for each experiment
+    do i = 1, 3
+        call random_number(random_data(i,:))
+    enddo
+
     call calc_model(b1_act, k_act, Y_theor)
-    call calc_experimental(Y_theor, Y_exp)
+    call calc_experimental(Y_theor, random_data, Y_exp)
 
     do j = 1, 3
         open (file=noise_paths(j), encoding=E_, newunit=Out)
@@ -27,7 +32,7 @@ program calc
         write(Out, '(i2, ",", f8.4)') (i, Y_theor(i), i = 1, data_len)
     close (Out)
 
-    do i = 1, 3
+    do concurrent (i = 1:3)
         call optimize(b1_fake, k_fake, optim_b1(i), optim_k(i), Y_exp(i,:))
     enddo
 
@@ -66,18 +71,17 @@ pure subroutine calc_model(b1, k, result)
     enddo
 end subroutine calc_model
 
-subroutine calc_experimental(M, E)
-    real(8), intent(in)  :: M(data_len)
+pure subroutine calc_experimental(M, random_data, E)
+    real(8), intent(in)  :: M(data_len), random_data(3, data_len)
     real(8), intent(out) :: E(3, data_len)
-    real(8)              :: delta_y, factors(3), noise(data_len)
+    real(8)              :: delta_y, factors(3)
     integer              :: i
 
     factors = (/0.05, 0.1, 0.2/)
 
-    do i = 1, 3
-        call random_number(noise)
+    do concurrent (i = 1:3)
         delta_y = maxval(abs(M)) * factors(i)
-        E(i,:) = M + (noise * (2 * delta_y) - delta_y)
+        E(i,:) = M + (random_data(i,:) * (2 * delta_y) - delta_y)
     enddo
 end subroutine calc_experimental
 
