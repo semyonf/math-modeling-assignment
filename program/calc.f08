@@ -92,15 +92,15 @@ end function calculate_cf
 pure subroutine optimize(start_x, start_y, optimal_x, optimal_y, Y_exp)
     real(8), intent(in)  :: start_x, start_y, Y_exp(data_len)
     real(8), intent(out) :: optimal_x, optimal_y
-    real(8)              :: x, y, f, f1, f_prev, delta_x, delta_y
+    real(8)              :: x, y, f, f1, f2, delta_x, delta_y
     integer              :: m, iter
     integer, parameter   :: MAX_ITER = 10000
-    integer, parameter   :: MIN_ITER = 10
 
     x = start_x
     y = start_y
 
     f = calculate_cf(x, y, Y_exp)
+    f2 = f
 
     delta_x = 0.1_8
     delta_y = 0.1_8
@@ -109,8 +109,6 @@ pure subroutine optimize(start_x, start_y, optimal_x, optimal_y, Y_exp)
 
     do iter = 1, MAX_ITER
         if (m == 1) then
-            f_prev = f
-
             x = x + delta_x
             f1 = calculate_cf(x, y, Y_exp)
 
@@ -136,15 +134,17 @@ pure subroutine optimize(start_x, start_y, optimal_x, optimal_y, Y_exp)
             endif
 
             m = 1
-
-            if (iter > MIN_ITER .and. abs(f - f_prev) < 1e-4_8) then
-                exit
-            endif
         endif
-    enddo
 
-    optimal_x = x
-    optimal_y = y
+        if (abs(f2 - f1) < 1e-1_8) then
+            optimal_x = x
+            optimal_y = y
+
+            exit
+        endif
+
+        f2 = f1
+    enddo
 end subroutine optimize
 
 end program calc
