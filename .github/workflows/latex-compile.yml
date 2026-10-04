@@ -24,40 +24,21 @@ jobs:
           texlive-lang-cyrillic \
           texlive-fonts-recommended \
           texlive-science \
+          texlive-pictures \
           gfortran
 
-    - name: Create required directories
+    - name: Build program, generate data and compile report
       run: |
-        mkdir -p data program/bin out
+        # программа завершается с ошибкой, если решение методом Эйлера расходится
+        # с точной переходной характеристикой или GZ1 не находит минимум тестовых функций
+        make all
 
-    - name: Compile Fortran program
+    - name: Verify generated data
       run: |
-        gfortran -Wall -std=f2008ts -fimplicit-none \
-          -Wno-maybe-uninitialized -Wintrinsics-std \
-          -static-libgfortran -flto \
-          program/calc.f08 -o program/bin/calc
-
-    - name: Run Fortran program to generate data
-      run: |
-        ./program/bin/calc
-
-    - name: Verify data files were generated
-      run: |
-        test -f data/theor.csv
-        test -f data/exp1.csv
-        test -f data/exp2.csv
-        test -f data/exp3.csv
-        test -f data/final.csv
-        echo "All required data files generated successfully"
-
-    - name: Compile LaTeX document
-      run: |
-        pdflatex -interaction=nonstopmode -halt-on-error report.tex
-        pdflatex -interaction=nonstopmode -halt-on-error report.tex
-
-    - name: Move PDF to output directory
-      run: |
-        mv report.pdf out/
+        for f in theor exact exp1 exp2 exp3 final rng-hist opt-ellipse opt-rosenbrock opt-cf1 opt-cf2 opt-cf3; do
+          test -f "data/$f.csv"
+        done
+        test -f data/results.tex
         ls -lh out/report.pdf
 
     - name: Upload PDF artifact

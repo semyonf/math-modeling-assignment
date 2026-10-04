@@ -1,6 +1,5 @@
 out
 data/*
-!data/precomputed
-!data/precomputed/*
+program/bin
+*.mod
 .DS_Store
-calc

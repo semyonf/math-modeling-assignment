@@ -1,37 +1,37 @@
-.PHONY:calc pdf clean
+.PHONY: all calc pdf run clean
 
 TEX=pdflatex
 
 FORTRAN=gfortran
-CFLAGS=-Wall -std=f2008ts -fimplicit-none -ftree-vectorizer-verbose=2 \
--Wno-maybe-uninitialized -Wintrinsics-std -static-libgfortran -flto -fall-intrinsics
+CFLAGS=-Wall -Wextra -std=f2008 -fimplicit-none -static-libgfortran -O2
 
-all:calc pdf
+all: pdf
 
+# Все данные для отчёта (data/*.csv, data/results.tex) генерирует программа
 calc: program/bin/calc
-	if [ ! -d 'data' ]; then mkdir 'data'; fi
+	mkdir -p data
 	./program/bin/calc
 
 program/bin/calc: program/calc.f08
-	if [ ! -d 'program/bin' ]; then mkdir 'program/bin'; fi
+	mkdir -p program/bin
 	$(FORTRAN) $(CFLAGS) program/calc.f08 -o program/bin/calc
 
-pdf:
-	$(TEX) report.tex
-	if [ ! -d 'out' ]; then mkdir 'out'; fi
+pdf: calc
+	$(TEX) -interaction=nonstopmode -halt-on-error report.tex
+	mkdir -p out
 	mv report.pdf out/report.pdf
 	rm -fv *.aux *.bbl *.blg *.lof \
 	*.out *.pdf *.snm *.vrb *.toc  \
 	*.log *.lol *.lot *.nav *.bak  \
-	*.loa *.thm
+	*.loa *.thm *.mod
 
 run:
 	if [ ! -r 'out/report.pdf' ];    \
 		then echo '\n\nNOTHING TO DISPLAY, BUILD FIRST!'; \
-		else open out/report.pdf ;\
+		else xdg-open out/report.pdf 2>/dev/null || open out/report.pdf ;\
 	fi
 
 clean:
-	rm -fv program/bin/* program/obj/* data/*.csv \
+	rm -fv program/bin/* data/*.csv data/*.tex *.mod \
 	*.aux *.bbl *.blg *.lof *.out *.pdf *.snm *.vrb \
 	*.toc *.log *.lol *.lot *.nav *.bak *.loa *.thm
