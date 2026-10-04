@@ -1,41 +1,89 @@
-\part{ФОРМИРОВАНИЕ ЦЕЛЕВОЙ ФУНКЦИИ}
-    \begin{center}
-        Целевая функция 2: $CF=\sum(Y_{\text{э}} - Y_{\text{м}})^2$
-    \end{center}
+\part{ФОРМИРОВАНИЕ И ОПТИМИЗАЦИЯ ЦЕЛЕВОЙ ФУНКЦИИ}
+    \section*{Целевая функция}
+        \begin{center}
+            Целевая функция 2: $CF(k, b_1) = \sum\limits_{i=1}^{25}\left(y^{\text{Э}}(t_i) - y^{M}(t_i; k, b_1)\right)^2$
+        \end{center}
 
-    Неизвестными являются параметры $k$, $b_1$, для оптимизации целевой функции к ней применяется ранее написанный алгоритм. На каждой итерации параметры для расчета нового $y_M$ будут изменяться. Значения остальных переменных остаются такими же, как при вычислении теоретических значений.
+        Неизвестными являются параметры $k$ и $b_1$. Модельные значения $y^M$ вычисляются тем же методом, что и $y^T$ в части 1, при текущих значениях $k$, $b_1$; остальные параметры ($a$, $b_2$, $x$) известны. Минимум $CF$ ищется методом $GZ_1$ из части 2 из начальной точки $k = 5$, $b_1 = 2$.
 
-    Оптимизация будет выполняться для трех экспериментальных функций $y_{\text{Э1}}, y_{\text{Э2}}, y_{\text{Э3}}$. В результате получаем три пары значений неизвестных параметров.
+        Оптимизация выполняется для трёх экспериментальных функций $y^{\text{Э}_1}, y^{\text{Э}_2}, y^{\text{Э}_3}$. В результате получаются три пары оценок неизвестных параметров. Истинные значения $k = 4$, $b_1 = 1$ известны, поэтому для каждой оценки можно указать относительную погрешность $\delta$.
 
-    \begin{center}
-        \begin{tabular}{c|c|c|}
-        \cline{2-3}
-                                    & k    & $b_1$  \\ \hline
-        \multicolumn{1}{|c|}{$CF1$} & 3.9848 & 0.9650 \\ \hline
-        \multicolumn{1}{|c|}{$CF2$} & 4.0125 & 1.0125 \\ \hline
-        \multicolumn{1}{|c|}{$CF3$} & 3.9492 & 0.8227  \\ \hline
-        \multicolumn{1}{|c|}{$Y_{\text{сред}}$} & 3.9822  & 0.9333   \\ \hline
-        \end{tabular}
-    \end{center}
+    \section*{Результаты}
+        \begin{center}
+            \begin{tabular}{|l|c|c|c|c|c|}
+                \hline
+                Опыт (шум) & $k$ & $\delta k$ & $b_1$ & $\delta b_1$ & $CF_{\min}$ \\ \hline
+                \ResultsRows
+            \end{tabular}
+        \end{center}
 
-    \begin{center}
-        \begin{tikzpicture}
-            \begin{axis}[
-                width=16cm,
-                height=10cm,
-                samples=1,
-                minor tick num = 1,
-                grid = both,
-                legend style={at={(0.5,-0.1)},anchor=north}
-            ]
+        Опыты имеют разную точность: дисперсия равномерного шума равна $\Delta y^2/3$ и при уровне $20\%$ в $16$ раз больше, чем при $5\%$. Простое среднее даёт всем опытам одинаковый вес, и самый шумный опыт ухудшает результат. Поэтому, помимо среднего, вычисляется среднее, взвешенное обратно пропорционально дисперсии шума:
+        $$
+            \hat\theta = \sum_{j=1}^3 w_j \hat\theta_j, \qquad
+            w_j = \frac{1/\Delta y_j^2}{\sum_l 1/\Delta y_l^2}, \qquad
+            w = (\WeightA;\ \WeightB;\ \WeightC).
+        $$
 
-            \addplot table [col sep=comma] {data/final.csv};
-            \addlegendentry{$Y_{\text{сред.}}$}
-            \addplot table [col sep=comma] {data/theor.csv};
-            \addlegendentry{$Y_{\text{теор.}}$}
+        Траектории поиска минимума на плоскости параметров (крестик -- истинные значения):
+        \begin{center}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    width=14cm,
+                    height=9cm,
+                    xlabel=$b_1$,
+                    ylabel=$k$,
+                    minor tick num = 1,
+                    grid = both,
+                    legend pos = north west
+                ]
+                    \addplot [blue, mark=*, mark size=1pt] table [col sep=comma, x=x, y=y] {data/opt-cf1.csv};
+                    \addlegendentry{$CF_1$}
+                    \addplot [red, mark=square*, mark size=1pt] table [col sep=comma, x=x, y=y] {data/opt-cf2.csv};
+                    \addlegendentry{$CF_2$}
+                    \addplot [brown, mark=triangle*, mark size=1pt] table [col sep=comma, x=x, y=y] {data/opt-cf3.csv};
+                    \addlegendentry{$CF_3$}
+                    \addplot [only marks, mark=x, mark size=6pt, black, thick] coordinates {(1,4)};
+                    \addlegendentry{истинные}
+                \end{axis}
+            \end{tikzpicture}
+        \end{center}
 
-            \end{axis}
-        \end{tikzpicture}
-    \end{center}
+        Модель с параметрами, найденными взвешенным усреднением ($k = \KFinal$, $b_1 = \BFinal$), в сравнении с теоретической:
+        \begin{center}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    width=16cm,
+                    height=10cm,
+                    xlabel=$t$,
+                    ylabel=$y$,
+                    minor tick num = 1,
+                    grid = both,
+                    legend style={at={(0.5,-0.12)},anchor=north},
+                    legend columns=2
+                ]
+                    \addplot [blue, mark=*] table [col sep=comma, x=t, y=y] {data/theor.csv};
+                    \addlegendentry{$y^T$}
+                    \addplot [red, dashed, mark=o] table [col sep=comma, x=t, y=y] {data/final.csv};
+                    \addlegendentry{$y^M$ с найденными параметрами}
+                \end{axis}
+            \end{tikzpicture}
+        \end{center}
 
-    Так как график, построенный по теоретическим данным совпадает с полученным графиком функции с модельными значениями, можно сделать вывод, что оптимизация выполнена верно.
+    \section*{Статистика оценок}
+        Результат одного опыта случаен: при другой реализации шума оценки будут другими. Чтобы оценить точность метода, а не отдельного опыта, весь эксперимент (генерация шума и оптимизация) повторён $\MonteCarloRuns$ раз. В таблице -- среднее и среднеквадратичное отклонение (СКО) полученных оценок.
+        \begin{center}
+            \begin{tabular}{|l|c|c|c|c|}
+                \hline
+                \multirow{2}{*}{Оценка} & \multicolumn{2}{c|}{$k$} & \multicolumn{2}{c|}{$b_1$} \\ \cline{2-5}
+                 & среднее & СКО & среднее & СКО \\ \hline
+                \MonteCarloRows
+            \end{tabular}
+        \end{center}
+
+    \section*{Выводы четвёртой части}
+        \begin{itemize}
+            \item Средние значения оценок совпадают с истинными ($k = 4$, $b_1 = 1$) в пределах статистической погрешности, то есть систематической ошибки метод не даёт. Это подтверждает и правильность реализации модели и оптимизации.
+            \item Разброс оценок растёт примерно пропорционально уровню шума: при увеличении шума вдвое СКО тоже увеличивается примерно вдвое.
+            \item Относительная погрешность $k$ в несколько раз меньше, чем у $b_1$: $k$ задаёт установившееся значение, по которому есть много наблюдений, а $b_1$ влияет только на форму переходного процесса.
+            \item Простое среднее трёх опытов оказывается менее точным, чем оценка по одному наименее зашумлённому опыту. Взвешенное среднее учитывает разную точность опытов и даёт наименьший разброс.
+        \end{itemize}
